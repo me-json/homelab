@@ -1,0 +1,14 @@
+# Managed by Ansible
+route:
+  receiver: {{ 'pushover' if pushover_user_key is defined else 'blackhole' }}
+  group_by: [alertname, instance]
+
+receivers:
+  - name: blackhole
+{% if pushover_user_key is defined %}
+  - name: pushover
+    pushover_configs:
+      - user_key: "{{ pushover_user_key }}"
+        token: "{{ pushover_app_token }}"
+        send_resolved: true
+{% endif %}

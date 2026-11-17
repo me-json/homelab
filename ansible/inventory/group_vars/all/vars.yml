@@ -5,6 +5,33 @@ stacks:
   - name: omada
     env:
       OMADA_TAG: "6"
-  # - name: monitoring
-  # - name: home
-  # - name: adguard
+
+  - name: monitoring
+    env:
+      PROMETHEUS_TAG: latest
+      ALERTMANAGER_TAG: latest
+      GRAFANA_TAG: latest
+      UPTIME_KUMA_TAG: "1"
+      PROM_RETENTION: 30d
+    templates:
+      - alertmanager.yml
+    dirs:
+      - { path: prometheus-data, owner: 65534 }
+      - { path: alertmanager-data, owner: 65534 }
+      - { path: grafana-data, owner: 472 }
+      - { path: uptime-kuma-data, owner: 0 }
+
+  - name: home
+    env:
+      HA_TAG: stable
+      MOSQUITTO_TAG: "2"
+    dirs:
+      - { path: ha-config, owner: 0 }
+      - { path: mosquitto-data, owner: 1883 }
+
+  - name: adguard
+    env:
+      ADGUARD_TAG: latest
+    dirs:
+      - { path: work, owner: 0 }
+      - { path: conf, owner: 0 }

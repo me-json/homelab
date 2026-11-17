@@ -1,0 +1,34 @@
+services:
+  homeassistant:
+    image: ghcr.io/home-assistant/home-assistant:${HA_TAG}
+    container_name: homeassistant
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ}
+    volumes:
+      - ./ha-config:/config
+      - /etc/localtime:/etc/localtime:ro
+      - /run/dbus:/run/dbus:ro
+
+  mosquitto:
+    image: eclipse-mosquitto:${MOSQUITTO_TAG}
+    container_name: mosquitto
+    network_mode: host
+    restart: unless-stopped
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - ./mosquitto-data:/mosquitto/data
+
+  # Enable once you have a Zigbee coordinator
+  # zigbee2mqtt:
+  #   image: koenkk/zigbee2mqtt:latest
+  #   container_name: zigbee2mqtt
+  #   network_mode: host
+  #   restart: unless-stopped
+  #   environment:
+  #     TZ: ${TZ}
+  #   volumes:
+  #     - ./z2m-data:/app/data
+  #   devices:
+  #     - /dev/serial/by-id/CHANGE_ME:/dev/ttyACM0
