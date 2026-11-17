@@ -1,0 +1,10 @@
+timezone: America/Los_Angeles
+stacks_root: /opt/stacks
+
+stacks:
+  - name: omada
+    env:
+      OMADA_TAG: "6"
+  # - name: monitoring
+  # - name: home
+  # - name: adguard

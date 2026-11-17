@@ -1,0 +1,5 @@
+# Managed by Ansible
+[Unit]
+After=zfs-mount.service
+RequiresMountsFor={% for s in stacks %}{{ stacks_root }}/{{ s.name }} {% endfor %}
+

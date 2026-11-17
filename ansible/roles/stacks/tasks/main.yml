@@ -1,0 +1,25 @@
+- name: Datasets are mounted
+  ansible.builtin.assert:
+    that: (stacks_root ~ '/' ~ item.name) in (ansible_mounts | map(attribute='mount'))
+    fail_msg: "{{ stacks_root }}/{{ item.name }} is not mounted. Create/import the dataset first."
+  loop: "{{ stacks }}"
+
+- name: Compose files
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/../../stacks/{{ item.name }}/"
+    dest: "{{ stacks_root }}/{{ item.name }}/"
+    mode: "0644"
+  loop: "{{ stacks }}"
+
+- name: .env files
+  ansible.builtin.template:
+    src: env.j2
+    dest: "{{ stacks_root }}/{{ item.name }}/.env"
+    mode: "0600"
+  loop: "{{ stacks }}"
+
+- name: Stacks up
+  community.docker.docker_compose_v2:
+    project_src: "{{ stacks_root }}/{{ item.name }}"
+    pull: missing
+  loop: "{{ stacks }}"
