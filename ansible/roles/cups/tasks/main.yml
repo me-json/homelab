@@ -1,1 +1,16 @@
-[]
+- name: Install CUPS + Avahi (printer discovery / AirPrint)
+  ansible.builtin.apt:
+    name:
+      - cups
+      - avahi-daemon
+    state: present
+    update_cache: true
+
+- name: CUPS + Avahi enabled
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: true
+    state: started
+  loop:
+    - cups
+    - avahi-daemon
