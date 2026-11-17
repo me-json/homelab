@@ -1,1 +1,67 @@
-[]
+- name: Install nginx + certbot (Cloudflare DNS)
+  ansible.builtin.apt:
+    name:
+      - nginx
+      - certbot
+      - python3-certbot-dns-cloudflare
+    state: present
+    update_cache: true
+
+- name: Cloudflare token for certbot (from Vault)
+  ansible.builtin.copy:
+    dest: /etc/letsencrypt/cloudflare.ini
+    content: "dns_cloudflare_api_token = {{ cloudflare_dns_token }}\n"
+    owner: root
+    group: root
+    mode: "0600"
+  no_log: true
+
+- name: Wildcard cert (first time only)
+  ansible.builtin.command: >
+    certbot certonly --non-interactive --agree-tos
+    --register-unsafely-without-email
+    --dns-cloudflare --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini
+    --cert-name {{ nginx_cert_domain }}
+    -d {{ nginx_cert_domain }} -d '*.{{ nginx_cert_domain }}'
+  args:
+    creates: "/etc/letsencrypt/live/{{ nginx_cert_domain }}/fullchain.pem"
+
+- name: Reload nginx after each renewal
+  ansible.builtin.copy:
+    dest: /etc/letsencrypt/renewal-hooks/deploy/reload-nginx.sh
+    mode: "0755"
+    content: |
+      #!/bin/sh
+      systemctl reload nginx
+
+- name: Auto-renew timer on
+  ansible.builtin.systemd:
+    name: certbot.timer
+    enabled: true
+    state: started
+
+- name: Site config
+  ansible.builtin.copy:
+    src: sites/bruiser.online
+    dest: /etc/nginx/sites-available/bruiser.online
+    mode: "0644"
+  notify: Reload nginx
+
+- name: Enable site
+  ansible.builtin.file:
+    src: /etc/nginx/sites-available/bruiser.online
+    dest: /etc/nginx/sites-enabled/bruiser.online
+    state: link
+  notify: Reload nginx
+
+- name: Remove default site
+  ansible.builtin.file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: Reload nginx
+
+- name: nginx enabled
+  ansible.builtin.systemd:
+    name: nginx
+    enabled: true
+    state: started
