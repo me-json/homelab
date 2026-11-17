@@ -15,8 +15,8 @@ upstream ap_apartment {
 server {  
     listen 443 ssl default_server;  
     server_name _;  
-    ssl_certificate /etc/ssl/cloudflare/example_com.crt;  
-    ssl_certificate_key /etc/ssl/cloudflare/example_com.key;  
+    ssl_certificate /etc/letsencrypt/live/bruiser.online/fullchain.pem;  
+    ssl_certificate_key /etc/letsencrypt/live/bruiser.online/privkey.pem;  
     return 444;  
 }  
 
@@ -24,8 +24,8 @@ server {
     listen 443 ssl;
     server_name ap-apartment.bruiser.online;
 
-    ssl_certificate /etc/ssl/cloudflare/example_com.crt;
-    ssl_certificate_key /etc/ssl/cloudflare/example_com.key;
+    ssl_certificate /etc/letsencrypt/live/bruiser.online/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/bruiser.online/privkey.pem;
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers HIGH:!aNULL:!MD5;
     location / {
@@ -51,8 +51,8 @@ server {
     listen 443 ssl;
     server_name ap-garage.bruiser.online;
 
-    ssl_certificate /etc/ssl/cloudflare/example_com.crt;
-    ssl_certificate_key /etc/ssl/cloudflare/example_com.key;
+    ssl_certificate /etc/letsencrypt/live/bruiser.online/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/bruiser.online/privkey.pem;
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers HIGH:!aNULL:!MD5;
     location / {
@@ -78,8 +78,8 @@ server {
     listen 443 ssl;
     server_name thermal-1.bruiser.online;
 
-    ssl_certificate /etc/ssl/cloudflare/example_com.crt;
-    ssl_certificate_key /etc/ssl/cloudflare/example_com.key;
+    ssl_certificate /etc/letsencrypt/live/bruiser.online/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/bruiser.online/privkey.pem;
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers HIGH:!aNULL:!MD5;
 
@@ -97,8 +97,8 @@ server {
     listen 443 ssl http2;
     server_name lubelogger.bruiser.online;
 
-    ssl_certificate     /etc/ssl/cloudflare/example_com.crt;
-    ssl_certificate_key /etc/ssl/cloudflare/example_com.key;
+    ssl_certificate     /etc/letsencrypt/live/bruiser.online/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/bruiser.online/privkey.pem;
 
     client_max_body_size 100M;
 
@@ -125,8 +125,8 @@ server {
     listen 443 ssl http2;
     server_name office.bruiser.online;
 
-    ssl_certificate     /etc/ssl/cloudflare/example_com.crt;
-    ssl_certificate_key /etc/ssl/cloudflare/example_com.key;
+    ssl_certificate     /etc/letsencrypt/live/bruiser.online/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/bruiser.online/privkey.pem;
 
     client_max_body_size 16G;
 
@@ -149,8 +149,8 @@ server {
     server_name paperless.bruiser.online;
 
     add_header Strict-Transport-Security "max-age=15552000; includeSubDomains" always;
-    ssl_certificate     /etc/ssl/cloudflare/example_com.crt;
-    ssl_certificate_key /etc/ssl/cloudflare/example_com.key;
+    ssl_certificate     /etc/letsencrypt/live/bruiser.online/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/bruiser.online/privkey.pem;
 
     client_max_body_size 1G;
 
@@ -180,8 +180,8 @@ server {
     proxy_busy_buffers_size 32k;
 
     add_header Strict-Transport-Security "max-age=15552000; includeSubDomains" always;
-    ssl_certificate     /etc/ssl/cloudflare/example_com.crt;
-    ssl_certificate_key /etc/ssl/cloudflare/example_com.key;
+    ssl_certificate     /etc/letsencrypt/live/bruiser.online/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/bruiser.online/privkey.pem;
 
     client_max_body_size 16G;
 
@@ -206,8 +206,8 @@ server {
     listen 443 ssl http2;
     server_name auth.bruiser.online;
 
-    ssl_certificate     /etc/ssl/cloudflare/example_com.crt;
-    ssl_certificate_key /etc/ssl/cloudflare/example_com.key;
+    ssl_certificate     /etc/letsencrypt/live/bruiser.online/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/bruiser.online/privkey.pem;
 
     client_max_body_size 5M;
 
@@ -229,8 +229,8 @@ server {
     listen 443 ssl http2;
     server_name home3d.bruiser.online;
 
-    ssl_certificate     /etc/ssl/cloudflare/example_com.crt;
-    ssl_certificate_key /etc/ssl/cloudflare/example_com.key;
+    ssl_certificate     /etc/letsencrypt/live/bruiser.online/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/bruiser.online/privkey.pem;
 
     client_max_body_size 512M;
 
@@ -253,8 +253,8 @@ server {
     listen 443 ssl http2;
     server_name arm.bruiser.online;
 
-    ssl_certificate     /etc/ssl/cloudflare/example_com.crt;
-    ssl_certificate_key /etc/ssl/cloudflare/example_com.key;
+    ssl_certificate     /etc/letsencrypt/live/bruiser.online/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/bruiser.online/privkey.pem;
 
     location / {
         proxy_pass http://10.182.100.100:8080;
@@ -275,8 +275,8 @@ server {
     listen 443 ssl http2;
     server_name git.bruiser.online;
 
-    ssl_certificate     /etc/ssl/cloudflare/example_com.crt;
-    ssl_certificate_key /etc/ssl/cloudflare/example_com.key;
+    ssl_certificate     /etc/letsencrypt/live/bruiser.online/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/bruiser.online/privkey.pem;
 
     client_max_body_size 512M;
 
@@ -301,8 +301,8 @@ server {
     listen 443 ssl;
     server_name printers.bruiser.online;
 
-    ssl_certificate /etc/ssl/cloudflare/example_com.crt;
-    ssl_certificate_key /etc/ssl/cloudflare/example_com.key;
+    ssl_certificate /etc/letsencrypt/live/bruiser.online/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/bruiser.online/privkey.pem;
 
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers HIGH:!aNULL:!MD5;
@@ -326,8 +326,8 @@ server {
     listen 443;
     server_name jellyfin.bruiser.online;
 
-    ssl_certificate /etc/ssl/cloudflare/example_com.crt;
-    ssl_certificate_key /etc/ssl/cloudflare/example_com.key;
+    ssl_certificate /etc/letsencrypt/live/bruiser.online/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/bruiser.online/privkey.pem;
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers HIGH:!aNULL:!MD5;
 
@@ -354,8 +354,8 @@ server {
     listen 443;
     server_name plex.bruiser.online;
 
-    ssl_certificate /etc/ssl/cloudflare/example_com.crt;
-    ssl_certificate_key /etc/ssl/cloudflare/example_com.key;
+    ssl_certificate /etc/letsencrypt/live/bruiser.online/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/bruiser.online/privkey.pem;
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers HIGH:!aNULL:!MD5;
 
@@ -382,8 +382,8 @@ server {
     listen 443 ssl;
     server_name inventory.bruiser.online;
 
-    ssl_certificate /etc/ssl/cloudflare/example_com.crt;
-    ssl_certificate_key /etc/ssl/cloudflare/example_com.key;
+    ssl_certificate /etc/letsencrypt/live/bruiser.online/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/bruiser.online/privkey.pem;
 
     # root → search page (no redirect)
     location = / {
@@ -409,8 +409,8 @@ server {
     listen 443 ssl;  
     server_name edge.bruiser.online;  
   
-    ssl_certificate /etc/ssl/cloudflare/example_com.crt;  
-    ssl_certificate_key /etc/ssl/cloudflare/example_com.key;  
+    ssl_certificate /etc/letsencrypt/live/bruiser.online/fullchain.pem;  
+    ssl_certificate_key /etc/letsencrypt/live/bruiser.online/privkey.pem;  
     ssl_protocols TLSv1.2 TLSv1.3;  
     ssl_ciphers HIGH:!aNULL:!MD5;  
   
@@ -426,8 +426,8 @@ server {
     listen 443 ssl;  
     server_name core.bruiser.online;  
   
-    ssl_certificate /etc/ssl/cloudflare/example_com.crt;  
-    ssl_certificate_key /etc/ssl/cloudflare/example_com.key;  
+    ssl_certificate /etc/letsencrypt/live/bruiser.online/fullchain.pem;  
+    ssl_certificate_key /etc/letsencrypt/live/bruiser.online/privkey.pem;  
     ssl_protocols TLSv1.2 TLSv1.3;  
     ssl_ciphers HIGH:!aNULL:!MD5;  
   
@@ -443,8 +443,8 @@ server {
     listen 443 ssl;  
     server_name ups-network.bruiser.online;  
   
-    ssl_certificate /etc/ssl/cloudflare/example_com.crt;  
-    ssl_certificate_key /etc/ssl/cloudflare/example_com.key;  
+    ssl_certificate /etc/letsencrypt/live/bruiser.online/fullchain.pem;  
+    ssl_certificate_key /etc/letsencrypt/live/bruiser.online/privkey.pem;  
     ssl_protocols TLSv1.2 TLSv1.3;  
     ssl_ciphers HIGH:!aNULL:!MD5;  
   
@@ -461,8 +461,8 @@ server {
     listen 443 ssl;  
     server_name pve-auth.bruiser.online;  
   
-    ssl_certificate /etc/ssl/cloudflare/example_com.crt;  
-    ssl_certificate_key /etc/ssl/cloudflare/example_com.key;  
+    ssl_certificate /etc/letsencrypt/live/bruiser.online/fullchain.pem;  
+    ssl_certificate_key /etc/letsencrypt/live/bruiser.online/privkey.pem;  
     ssl_protocols TLSv1.2 TLSv1.3;  
     ssl_ciphers HIGH:!aNULL:!MD5;  
   
@@ -488,8 +488,8 @@ server {
     listen 443 ssl;  
     server_name lte-wan.bruiser.online;  
   
-    ssl_certificate /etc/ssl/cloudflare/example_com.crt;  
-    ssl_certificate_key /etc/ssl/cloudflare/example_com.key;  
+    ssl_certificate /etc/letsencrypt/live/bruiser.online/fullchain.pem;  
+    ssl_certificate_key /etc/letsencrypt/live/bruiser.online/privkey.pem;  
     ssl_protocols TLSv1.2 TLSv1.3;  
     ssl_ciphers HIGH:!aNULL:!MD5;  
   
@@ -506,8 +506,8 @@ server {
     listen 443 ssl;  
     server_name dist-apartment.bruiser.online;  
   
-    ssl_certificate /etc/ssl/cloudflare/example_com.crt;  
-    ssl_certificate_key /etc/ssl/cloudflare/example_com.key;  
+    ssl_certificate /etc/letsencrypt/live/bruiser.online/fullchain.pem;  
+    ssl_certificate_key /etc/letsencrypt/live/bruiser.online/privkey.pem;  
     ssl_protocols TLSv1.2 TLSv1.3;  
     ssl_ciphers HIGH:!aNULL:!MD5;  
   
@@ -524,8 +524,8 @@ server {
     listen 443 ssl;  
     server_name dist-garage.bruiser.online;  
   
-    ssl_certificate /etc/ssl/cloudflare/example_com.crt;  
-    ssl_certificate_key /etc/ssl/cloudflare/example_com.key;  
+    ssl_certificate /etc/letsencrypt/live/bruiser.online/fullchain.pem;  
+    ssl_certificate_key /etc/letsencrypt/live/bruiser.online/privkey.pem;  
     ssl_protocols TLSv1.2 TLSv1.3;  
     ssl_ciphers HIGH:!aNULL:!MD5;  
   
@@ -541,8 +541,8 @@ server {
     listen 443 ssl;  
     server_name halow-main.bruiser.online;  
   
-    ssl_certificate /etc/ssl/cloudflare/example_com.crt;  
-    ssl_certificate_key /etc/ssl/cloudflare/example_com.key;  
+    ssl_certificate /etc/letsencrypt/live/bruiser.online/fullchain.pem;  
+    ssl_certificate_key /etc/letsencrypt/live/bruiser.online/privkey.pem;  
     ssl_protocols TLSv1.2 TLSv1.3;  
     ssl_ciphers HIGH:!aNULL:!MD5;  
   
@@ -559,8 +559,8 @@ server {
     listen 443 ssl;  
     server_name halow-garage.bruiser.online;  
   
-    ssl_certificate /etc/ssl/cloudflare/example_com.crt;  
-    ssl_certificate_key /etc/ssl/cloudflare/example_com.key;  
+    ssl_certificate /etc/letsencrypt/live/bruiser.online/fullchain.pem;  
+    ssl_certificate_key /etc/letsencrypt/live/bruiser.online/privkey.pem;  
     ssl_protocols TLSv1.2 TLSv1.3;  
     ssl_ciphers HIGH:!aNULL:!MD5;  
   
@@ -578,8 +578,8 @@ server {
     listen 443 ssl;  
     server_name nas-home.bruiser.online;  
   
-    ssl_certificate /etc/ssl/cloudflare/example_com.crt;  
-    ssl_certificate_key /etc/ssl/cloudflare/example_com.key;  
+    ssl_certificate /etc/letsencrypt/live/bruiser.online/fullchain.pem;  
+    ssl_certificate_key /etc/letsencrypt/live/bruiser.online/privkey.pem;  
     ssl_protocols TLSv1.2 TLSv1.3;  
     ssl_ciphers HIGH:!aNULL:!MD5;  
   
@@ -605,8 +605,8 @@ server {
     listen 443 ssl;  
     server_name pve-services-1.bruiser.online;  
   
-    ssl_certificate /etc/ssl/cloudflare/example_com.crt;  
-    ssl_certificate_key /etc/ssl/cloudflare/example_com.key;  
+    ssl_certificate /etc/letsencrypt/live/bruiser.online/fullchain.pem;  
+    ssl_certificate_key /etc/letsencrypt/live/bruiser.online/privkey.pem;  
     ssl_protocols TLSv1.2 TLSv1.3;  
     ssl_ciphers HIGH:!aNULL:!MD5;  
   
@@ -639,8 +639,8 @@ server {
     listen 443 ssl;
     server_name leds-kitchen.bruiser.online;
 
-    ssl_certificate /etc/ssl/cloudflare/example_com.crt;
-    ssl_certificate_key /etc/ssl/cloudflare/example_com.key;
+    ssl_certificate /etc/letsencrypt/live/bruiser.online/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/bruiser.online/privkey.pem;
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers HIGH:!aNULL:!MD5;
 
@@ -669,8 +669,8 @@ server {
     listen 443 ssl;
     server_name cameras.bruiser.online;
 
-    ssl_certificate /etc/ssl/cloudflare/example_com.crt;
-    ssl_certificate_key /etc/ssl/cloudflare/example_com.key;
+    ssl_certificate /etc/letsencrypt/live/bruiser.online/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/bruiser.online/privkey.pem;
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers HIGH:!aNULL:!MD5;
 
