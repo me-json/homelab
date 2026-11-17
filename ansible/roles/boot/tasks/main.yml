@@ -1,0 +1,23 @@
+- name: GRUB also installs to removable fallback path (EFI/BOOT/BOOTX64.EFI)
+  ansible.builtin.debconf:
+    name: grub-efi-amd64
+    question: grub2/force_efi_extra_removable
+    value: "true"
+    vtype: boolean
+  notify: Reinstall GRUB
+
+- name: ESP sync script
+  ansible.builtin.copy:
+    src: esp-sync
+    dest: /usr/local/sbin/esp-sync
+    mode: "0755"
+  notify: Sync ESPs
+
+- name: Run ESP sync after every apt/dpkg change
+  ansible.builtin.copy:
+    dest: /etc/apt/apt.conf.d/99esp-sync
+    mode: "0644"
+    content: |
+      // Managed by Ansible
+      DPkg::Post-Invoke { "/usr/local/sbin/esp-sync || true"; };
+  notify: Sync ESPs

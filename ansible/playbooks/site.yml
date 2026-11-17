@@ -3,6 +3,7 @@
   become: true
   roles:
     - { role: base,   tags: base }
+    - { role: boot,   tags: boot }
     - { role: zfs,    tags: zfs }
     - { role: docker, tags: docker }
     - { role: nginx,  tags: nginx }

@@ -1,0 +1,8 @@
+- name: Reinstall GRUB
+  ansible.builtin.command: >
+    grub-install --target=x86_64-efi --efi-directory=/boot/efi
+    --bootloader-id=debian --force-extra-removable
+  notify: Sync ESPs
+
+- name: Sync ESPs
+  ansible.builtin.command: /usr/local/sbin/esp-sync

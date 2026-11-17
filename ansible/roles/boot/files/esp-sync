@@ -1,0 +1,14 @@
+#!/bin/sh
+# Managed by Ansible: copy primary ESP (/boot/efi) to every other ESP
+set -eu
+ESP_TYPE=c12a7328-f81f-11d2-ba4b-00a0c93ec93b
+PRIMARY=$(findmnt -no SOURCE /boot/efi)
+
+for dev in $(lsblk -rno PATH,PARTTYPE | awk -v t="$ESP_TYPE" '$2==t {print $1}'); do
+  [ "$dev" = "$PRIMARY" ] && continue
+  mnt=$(mktemp -d)
+  mount "$dev" "$mnt"
+  trap 'umount "$mnt" 2>/dev/null; rmdir "$mnt"' EXIT
+  rsync -rt --delete --modify-window=1 /boot/efi/ "$mnt"/
+  umount "$mnt"; rmdir "$mnt"; trap - EXIT
+done
