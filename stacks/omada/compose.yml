@@ -11,17 +11,6 @@ services:
         hard: 8192
     environment:
       TZ: ${TZ}
- rm -f stacks/omada/.env.example ansible/roles/docker/files/zfs.conf
-mkdir -p ansible/roles/{base,docker,stacks}/{tasks,templates,handlers}
-
-cat > ansible/inventory/group_vars/all/vars.yml <<'EOF'
-timezone: America/Los_Angeles
-stacks_root: /opt/stacks
-
-stacks:
-  - name: omada
-    env:
-      OMADA_TAG: "6"
-  # - name: monitoring
-  # - name: home
-  # - name: adguard
+    volumes:
+      - ./data:/opt/tplink/EAPController/data
+      - ./logs:/opt/tplink/EAPController/logs
