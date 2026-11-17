@@ -1,0 +1,10 @@
+- name: Mini PC
+  hosts: minipc
+  become: true
+  roles:
+    - { role: base,   tags: base }
+    - { role: zfs,    tags: zfs }
+    - { role: docker, tags: docker }
+    - { role: nginx,  tags: nginx }
+    - { role: cups,   tags: cups }
+    - { role: stacks, tags: stacks }
