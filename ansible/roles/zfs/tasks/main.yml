@@ -1,1 +1,53 @@
-[]
+- name: Enable contrib (ZFS lives there)
+  ansible.builtin.copy:
+    dest: /etc/apt/sources.list.d/contrib.sources
+    mode: "0644"
+    content: |
+      Types: deb
+      URIs: http://deb.debian.org/debian
+      Suites: {{ ansible_distribution_release }} {{ ansible_distribution_release }}-updates
+      Components: contrib
+      Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+
+- name: Install ZFS
+  ansible.builtin.apt:
+    name:
+      - linux-headers-amd64
+      - zfs-dkms
+      - zfsutils-linux
+    state: present
+    update_cache: true
+  environment:
+    DEBIAN_FRONTEND: noninteractive
+
+- name: Key directory
+  ansible.builtin.file:
+    path: /etc/zfs/keys
+    state: directory
+    owner: root
+    group: root
+    mode: "0700"
+
+- name: Per-stack dataset keyfiles (from Vault)
+  ansible.builtin.copy:
+    dest: "/etc/zfs/keys/{{ item.name }}.key"
+    content: "{{ zfs_keys[item.name] }}"
+    owner: root
+    group: root
+    mode: "0400"
+  loop: "{{ stacks }}"
+  loop_control:
+    label: "{{ item.name }}"
+  no_log: true
+
+- name: Load ZFS keys at boot
+  ansible.builtin.copy:
+    src: zfs-load-keys.service
+    dest: /etc/systemd/system/zfs-load-keys.service
+    mode: "0644"
+
+- name: Enable key loading
+  ansible.builtin.systemd:
+    name: zfs-load-keys.service
+    enabled: true
+    daemon_reload: true
