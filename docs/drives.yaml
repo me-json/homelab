@@ -1,0 +1,23 @@
+# Linux Persistent Device ID: <transport>-<vendor>_<model>_<serial>
+
+general_purpose:
+ - serial: PPGJ7ABP
+   persistent_id: ata-WDC_WD202KFGX-68CKWN0_PPGJ7ABP
+ - serial: 20466A801044
+ - serial: 59GXD1NL
+
+media_archive:
+ - serial: PPGJ48VP
+   persidtent_id: ata-WDC_WD202KFGX-68CKWN0_PPGJ48VP
+   pool: media_001
+   kinda: zfs
+   encrypted: no
+surveillance:
+ - serial: ZW63SPE7
+   persistent_id: ata-ST4000VX016-3CV104-300_ZW63SPE7
+
+boot_drives:
+ - serial: BTBT90520QU3016N
+   capacity: 16GB
+   manufacturer: intel
+   type: nvme
