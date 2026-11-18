@@ -1,0 +1,41 @@
+# Managed by Ansible: {{ item.name }}.{{ nginx_cert_domain }}
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name {{ item.name }}.{{ nginx_cert_domain }};
+    include snippets/ssl.conf;
+{% if item.hsts | default(false) %}
+    add_header Strict-Transport-Security "max-age=15552000; includeSubDomains" always;
+{% endif %}
+{% if item.body is defined %}
+    client_max_body_size {{ item.body }};
+{% endif %}
+{% for d in item.server_extra | default([]) %}
+    {{ d }};
+{% endfor %}
+{% for loc in item.locations | default([{'path': '/'}]) %}
+
+    location {{ loc.path }} {
+        proxy_pass {{ loc.upstream | default(item.upstream) }};
+        proxy_http_version {{ item.http_version | default('1.1') }};
+        proxy_set_header Host {{ item.host | default('$host') }};
+        include snippets/proxy-headers.conf;
+{% if item.websocket | default(false) %}
+        include snippets/websocket.conf;
+{% endif %}
+{% if item.timeout is defined %}
+        proxy_read_timeout {{ item.timeout }};
+        proxy_send_timeout {{ item.timeout }};
+{% endif %}
+{% if not item.buffering | default(true) %}
+        proxy_buffering off;
+{% endif %}
+{% if not item.request_buffering | default(true) %}
+        proxy_request_buffering off;
+{% endif %}
+{% for d in item.extra | default([]) %}
+        {{ d }};
+{% endfor %}
+    }
+{% endfor %}
+}

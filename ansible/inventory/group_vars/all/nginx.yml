@@ -1,0 +1,197 @@
+# nginx reverse proxy: one entry per <name>.bruiser.online
+# Options (all optional except name + upstream):
+#   host: Host header sent upstream (default $host)
+#   websocket: true          -> Upgrade/Connection headers
+#   body: 100M               -> client_max_body_size
+#   timeout: 3600s           -> proxy read/send timeout
+#   buffering: false         -> proxy_buffering off
+#   request_buffering: false -> proxy_request_buffering off
+#   hsts: true               -> Strict-Transport-Security header
+#   http_version: "1.0"      -> default 1.1
+#   extra: [ ... ]           -> raw directives inside location
+#   server_extra: [ ... ]    -> raw directives inside server
+#   locations: [ {path, upstream} ] -> multiple locations
+
+minipc_ip: "{{ hostvars['minipc'].ansible_host }}"
+
+nginx_upstreams:
+  - name: ap_garage
+    servers: ["10.182.80.80:443 max_fails=0", "10.182.80.80:443 max_fails=0", "10.182.80.80:443 max_fails=0", "10.182.80.80:443 max_fails=0"]
+  - name: ap_apartment
+    servers: ["10.182.80.70:443 max_fails=0", "10.182.80.70:443 max_fails=0", "10.182.80.70:443 max_fails=0", "10.182.80.70:443 max_fails=0"]
+
+nginx_sites:
+  # ---------- mini PC (new) ----------
+  - name: omada
+    upstream: "https://{{ minipc_ip }}:8043"
+    websocket: true
+  - name: grafana
+    upstream: "http://{{ minipc_ip }}:3030"
+    websocket: true
+  - name: uptime
+    upstream: "http://{{ minipc_ip }}:3001"
+    websocket: true
+  - name: prometheus
+    upstream: "http://{{ minipc_ip }}:9090"
+  - name: alertmanager
+    upstream: "http://{{ minipc_ip }}:9093"
+  - name: ha
+    upstream: "http://{{ minipc_ip }}:8123"
+    websocket: true
+    timeout: 3600s
+  - name: adguard
+    upstream: "http://{{ minipc_ip }}:8080"
+
+  # ---------- apps ----------
+  - name: lubelogger
+    upstream: http://10.182.100.101:8080
+    websocket: true
+    body: 100M
+    timeout: 300s
+  - name: office
+    upstream: http://10.182.100.25:9980
+    websocket: true
+    body: 16G
+    timeout: 36000s
+    buffering: false
+  - name: paperless
+    upstream: http://10.182.100.35:8000
+    hsts: true
+    websocket: true
+    body: 1G
+    timeout: 86400s
+    buffering: false
+    request_buffering: false
+  - name: nextcloud
+    upstream: http://10.182.100.25:80
+    hsts: true
+    websocket: true
+    body: 16G
+    timeout: 86400s
+    buffering: false
+    request_buffering: false
+    server_extra:
+      - proxy_buffer_size 16k
+      - proxy_buffers 8 16k
+      - proxy_busy_buffers_size 32k
+  - name: auth
+    upstream: http://10.182.100.101:9000
+    websocket: true
+    body: 5M
+    timeout: 86400s
+    buffering: false
+  - name: home3d
+    upstream: http://10.182.100.76:80
+    websocket: true
+    body: 512M
+    timeout: 86400s
+    buffering: false
+  - name: arm
+    upstream: http://10.182.100.100:8080
+    websocket: true
+    timeout: 86400s
+    buffering: false
+  - name: git
+    upstream: http://10.182.100.98:3000
+    websocket: true
+    body: 512M
+    timeout: 86400s
+    buffering: false
+  - name: printers
+    upstream: https://10.182.100.33:631
+    host: 10.182.100.33:631
+    body: 100M
+  - name: jellyfin
+    upstream: http://10.182.100.101:8096
+    websocket: true
+    body: 100M
+    extra:
+      - proxy_buffer_size 32k
+      - proxy_buffers 4 32k
+      - proxy_busy_buffers_size 64k
+  - name: plex
+    upstream: http://10.182.100.101:32400
+    websocket: true
+    body: 100M
+    extra:
+      - proxy_buffer_size 32k
+      - proxy_buffers 4 32k
+      - proxy_busy_buffers_size 64k
+  - name: inventory
+    locations:
+      - { path: "= /", upstream: "http://10.182.100.45:8001/inventory/find_container" }
+      - { path: "/", upstream: "http://10.182.100.45:8001/" }
+  - name: cameras
+    upstream: http://10.182.100.101:5000
+    websocket: true
+    body: "0"
+    timeout: 3600s
+    buffering: false
+    request_buffering: false
+  - name: leds-kitchen
+    upstream: http://10.182.80.75/
+    host: $proxy_host
+    websocket: true
+    timeout: 3600s
+
+  # ---------- infrastructure ----------
+  - name: edge
+    upstream: https://10.182.80.1
+  - name: core
+    upstream: https://10.182.80.2
+  - name: ups-network
+    upstream: http://10.182.80.3
+  - name: pve-auth
+    upstream: https://10.182.80.4:8006
+    websocket: true
+    timeout: 3600s
+  - name: lte-wan
+    upstream: https://10.182.80.7
+  - name: dist-apartment
+    upstream: https://10.182.80.10
+  - name: dist-garage
+    upstream: https://10.182.80.20
+  - name: halow-main
+    upstream: https://10.182.80.210
+  - name: halow-garage
+    upstream: https://10.182.80.211
+  - name: nas-home
+    upstream: https://10.182.100.5
+    websocket: true
+    timeout: 3600s
+  - name: pve-services-1
+    upstream: https://10.182.100.60:8006
+    websocket: true
+    timeout: 3600s
+  - name: thermal-1
+    upstream: http://10.182.130.40
+    host: 10.182.130.40
+    http_version: "1.0"
+    extra:
+      - proxy_set_header Connection close
+      - proxy_buffering on
+      - proxy_redirect http://10.182.130.40/ /
+  - name: ap-apartment
+    upstream: https://ap_apartment
+    host: 10.182.80.70
+    extra:
+      - proxy_set_header Origin https://10.182.80.70
+      - proxy_set_header Referer https://10.182.80.70$request_uri
+      - proxy_set_header Accept-Encoding ""
+      - proxy_redirect https://10.182.80.70/ /
+      - sub_filter https://10.182.80.70 https://$host
+      - sub_filter_once off
+      - sub_filter_types text/css application/javascript text/javascript application/json
+      - proxy_next_upstream_tries 4
+  - name: ap-garage
+    upstream: https://ap_garage
+    host: 10.182.80.80
+    extra:
+      - proxy_set_header Origin https://10.182.80.80
+      - proxy_set_header Referer https://10.182.80.80$request_uri
+      - proxy_set_header Accept-Encoding ""
+      - proxy_redirect https://10.182.80.80/ /
+      - sub_filter https://10.182.80.80 https://$host
+      - sub_filter_once off
+      - sub_filter_types text/css application/javascript text/javascript application/json
+      - proxy_next_upstream_tries 4

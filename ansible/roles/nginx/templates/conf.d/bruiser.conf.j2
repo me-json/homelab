@@ -1,0 +1,13 @@
+# Managed by Ansible: shared http-level config
+map $http_upgrade $connection_upgrade {
+    default upgrade;
+    ''      close;
+}
+{% for u in nginx_upstreams %}
+
+upstream {{ u.name }} {
+{% for s in u.servers %}
+    server {{ s }};
+{% endfor %}
+}
+{% endfor %}

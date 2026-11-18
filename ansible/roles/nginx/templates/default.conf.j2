@@ -1,0 +1,14 @@
+# Managed by Ansible: catch-all + http→https
+server {
+    listen 443 ssl default_server;
+    http2 on;
+    server_name _;
+    include snippets/ssl.conf;
+    return 444;
+}
+
+server {
+    listen 80 default_server;
+    server_name *.{{ nginx_cert_domain }};
+    return 301 https://$host$request_uri;
+}

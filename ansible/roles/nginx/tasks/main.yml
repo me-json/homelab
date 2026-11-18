@@ -51,24 +51,57 @@
     enabled: true
     state: started
 
-- name: Site config
-  ansible.builtin.copy:
-    src: sites/bruiser.online
-    dest: /etc/nginx/sites-available/bruiser.online
+- name: Shared snippets (ssl, proxy headers, websocket)
+  ansible.builtin.template:
+    src: "snippets/{{ item }}.j2"
+    dest: "/etc/nginx/snippets/{{ item }}"
+    mode: "0644"
+  loop:
+    - ssl.conf
+    - proxy-headers.conf
+    - websocket.conf
+  notify: Reload nginx
+
+- name: http-level config (websocket map, upstreams)
+  ansible.builtin.template:
+    src: conf.d/bruiser.conf.j2
+    dest: /etc/nginx/conf.d/bruiser.conf
     mode: "0644"
   notify: Reload nginx
 
-- name: Enable site
-  ansible.builtin.file:
-    src: /etc/nginx/sites-available/bruiser.online
-    dest: /etc/nginx/sites-enabled/bruiser.online
-    state: link
+- name: Catch-all + http redirect
+  ansible.builtin.template:
+    src: default.conf.j2
+    dest: /etc/nginx/sites-available/00-default.conf
+    mode: "0644"
   notify: Reload nginx
 
-- name: Remove default site
+- name: One file per site
+  ansible.builtin.template:
+    src: site.conf.j2
+    dest: "/etc/nginx/sites-available/{{ item.name }}.conf"
+    mode: "0644"
+  loop: "{{ nginx_sites }}"
+  loop_control:
+    label: "{{ item.name }}"
+  notify: Reload nginx
+
+- name: Enable sites
   ansible.builtin.file:
-    path: /etc/nginx/sites-enabled/default
+    src: "/etc/nginx/sites-available/{{ item }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ item }}.conf"
+    state: link
+  loop: "{{ ['00-default'] + (nginx_sites | map(attribute='name') | list) }}"
+  notify: Reload nginx
+
+- name: Remove old monolith + Debian default
+  ansible.builtin.file:
+    path: "{{ item }}"
     state: absent
+  loop:
+    - /etc/nginx/sites-enabled/bruiser.online
+    - /etc/nginx/sites-available/bruiser.online
+    - /etc/nginx/sites-enabled/default
   notify: Reload nginx
 
 - name: nginx enabled
