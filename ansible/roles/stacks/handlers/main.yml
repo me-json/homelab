@@ -1,0 +1,6 @@
+- name: Restart Home Assistant
+  community.docker.docker_compose_v2:
+    project_src: "{{ stacks_root }}/home"
+    services:
+      - homeassistant
+    state: restarted

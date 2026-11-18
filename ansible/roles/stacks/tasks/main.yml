@@ -40,3 +40,21 @@
     project_src: "{{ stacks_root }}/{{ item.name }}"
     pull: missing
   loop: "{{ stacks }}"
+
+- name: Home Assistant config exists (created on first start)
+  ansible.builtin.wait_for:
+    path: "{{ stacks_root }}/home/ha-config/configuration.yaml"
+    timeout: 180
+  when: "'home' in (stacks | map(attribute='name'))"
+
+- name: Home Assistant trusts nginx as reverse proxy
+  ansible.builtin.blockinfile:
+    path: "{{ stacks_root }}/home/ha-config/configuration.yaml"
+    marker: "# {mark} ANSIBLE MANAGED: reverse proxy"
+    block: |
+      http:
+        use_x_forwarded_for: true
+        trusted_proxies:
+          - {{ minipc_ip }}
+  when: "'home' in (stacks | map(attribute='name'))"
+  notify: Restart Home Assistant
