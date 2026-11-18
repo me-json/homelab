@@ -1,8 +1,9 @@
 - name: Datasets are mounted
-  ansible.builtin.assert:
-    that: (stacks_root ~ '/' ~ item.name) in (ansible_mounts | map(attribute='mount'))
-    fail_msg: "{{ stacks_root }}/{{ item.name }} is not mounted. Create/import the dataset first."
+  ansible.builtin.command: "mountpoint -q {{ stacks_root }}/{{ item.name }}"
+  changed_when: false
   loop: "{{ stacks }}"
+  loop_control:
+    label: "{{ item.name }}"
 
 - name: Compose + static config files
   ansible.builtin.copy:
