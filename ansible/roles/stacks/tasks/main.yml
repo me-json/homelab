@@ -57,4 +57,6 @@
         trusted_proxies:
           - {{ minipc_ip }}
   when: "'home' in (stacks | map(attribute='name'))"
-  notify: Restart Home Assistant
+  notify:
+    - Reset Home Assistant http storage
+    - Restart Home Assistant

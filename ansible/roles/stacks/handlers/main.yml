@@ -1,3 +1,10 @@
+# HA 2026.8+ imports the http: YAML into .storage/http only once.
+# Removing it makes HA re-import the YAML on the next start.
+- name: Reset Home Assistant http storage
+  ansible.builtin.file:
+    path: "{{ stacks_root }}/home/ha-config/.storage/http"
+    state: absent
+
 - name: Restart Home Assistant
   community.docker.docker_compose_v2:
     project_src: "{{ stacks_root }}/home"
