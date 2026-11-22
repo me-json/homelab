@@ -142,7 +142,7 @@ nginx_sites:
   - name: core
     upstream: https://10.182.80.2
   - name: ups-network
-    upstream: http://10.182.80.3
+    upstream: http://10.182.80.103
   - name: pve-auth
     upstream: https://10.182.80.4:8006
     websocket: true
